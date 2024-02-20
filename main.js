@@ -11,11 +11,9 @@ import properties from "./properties.json"
 
 const final = JSON.stringify(data1) + JSON.stringify(data2)
 
-const res = properties.filter((x) => {
+let res = properties.filter((x) => {
   return final.includes(underscoreToCamelCase(x))
 })
 
-res.forEach((x) => console.log(x))
-
-document.querySelector('#app').innerHTML = `  tadam
-`;
+res = res.map(x=>underscoreToCamelCase(x))
+document.querySelector('#app').innerHTML = res.join("<br>")
