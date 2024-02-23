@@ -6,7 +6,7 @@ function find(where, what) {
   // return where.includes(what);
 }
 function findInCategory(category, prop, categoryName) {
-  const res = data1[category]?.reduce((acc, cur) => {
+  const res = (data1[category] || data2[category]).reduce((acc, cur) => {
     if (find(JSON.stringify(cur), prop))
       acc += `${cur.id} ${category == 'tables' && cur.definition?.apiOptions?.path ? '(<em><bold>' + cur.definition.apiOptions.path + '</bold></em>)' : ""} <br>`
     return acc;
@@ -28,14 +28,7 @@ function debounce(fn, delay) {
   };
 }
 
-// Get the textarea element
-const textarea = document.getElementById("propertyNames");
-
-// Attach the debounced function to the input event
-const debouncedFn = debounce(main, 500);
-textarea.addEventListener("input", debouncedFn);
-
-function main() {
+function refresh() {
   const inputText = textarea.value.trim(); // Remove leading/trailing spaces
 
   // Split the input text by spaces or new lines to create an array
@@ -64,6 +57,10 @@ function main() {
     propInfo += findInCategory("charts", curProp)
     propInfo += findInCategory("filters", curProp)
     propInfo += findInCategory("capabilities", curProp)
+    propInfo += findInCategory("calculations", curProp)
+    propInfo += findInCategory("recordTypes", curProp)
+    propInfo += findInCategory("systemConstants", curProp)
+    propInfo += findInCategory("columns", curProp)
 
     if (propInfo) {
       acc += `<div><h2>${curProp} is used in </h2><div class="categories">${propInfo}</div></div><hr>`
@@ -76,20 +73,9 @@ function main() {
   document.querySelector("#app").innerHTML = res
 }
 
-
-// function underscoreToCamelCase(inputString){
-//   return inputString.replace(/_./g, (match) => match.charAt(1).toUpperCase())
-// }
-
-// import data1 from "./sta-capability-management-configs_19-02-2024.json"
-// import  data2 from "./sta-data-dictionary-configs_20-02-2024.json"
-// import properties from "./properties.json"
-
-// const final = JSON.stringify(data1) + JSON.stringify(data2)
-
-// let res = properties.filter((x) => {
-// return final.includes(underscoreToCamelCase(x))
-// })
-
-// res = res.map(x=>underscoreToCamelCase(x))
-// document.querySelector('#app').innerHTML = res.join("<br>")
+// Get the textarea element
+const textarea = document.getElementById("propertyNames");
+// Attach the debounced function to the input event
+const debouncedFn = debounce(refresh, 500);
+textarea.addEventListener("input", debouncedFn);
+refresh();
