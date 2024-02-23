@@ -8,7 +8,7 @@ function find(where, what) {
 function findInCategory(category, prop, categoryName) {
   const res = data1[category]?.reduce((acc, cur) => {
     if (find(JSON.stringify(cur), prop))
-      acc += `${cur.id} <br>`
+      acc += `${cur.id} ${category == 'tables' && cur.definition?.apiOptions?.path ? '(<em><bold>' + cur.definition.apiOptions.path + '</bold></em>)' : ""} <br>`
     return acc;
   }, '')
   return res ? `<div class="category"><em><h5>${(categoryName || category).toUpperCase()}:</h5></em>${res}</div>`
